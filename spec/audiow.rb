@@ -1,31 +1,43 @@
 require 'spec_helper'
 require 'watir'
-require 'pry'
 
-@browser = Watir:: Browser.new :firefox
 
-@browser.goto url("/login")
+describe "Logged in user posting audio" do 
 
-text = @browser.text_field :id, "signup_email"
-text.set "aoloyede@testingcircle.com"
+	before(:all) do 
+		@browser = Watir:: Browser.new :firefox
+		@browser.goto url("/login")
+	end
 
-pw = @browser.text_field :id, "signup_password"
-pw.set "testacademy"
+	after(:all) do 
+		@browser.close
+	end 
 
-@browser.button(:id, "signup_forms_submit").click
+	it "Logging in" do 
+		text = @browser.text_field :id, "signup_email"
+		text.set "aoloyede@testingcircle.com"
 
-@browser.a(:id, "new_post_label_audio").click 
+		pw = @browser.text_field :id, "signup_password"
+		pw.set "testacademy"
 
-at = @browser.text_field :id, "audio_search_field"
-at.set "Lil Kesh - Shoki"
+		@browser.button(:id, "signup_forms_submit").click
+		expect(@browser.url == "https://www.tumblr.com/dashboard")
+	end 
 
-@browser.a(:id, "tab_audio_upload").click
+	it "Posting audio" do 
+		@browser.a(:id, "new_post_label_audio").click 
 
-@browser.a(:id, "tab_audio_external").click 
+		at = @browser.text_field :id, "audio_search_field"
+		at.set "Lil Kesh - Shoki"
 
-url = @browser.text_field :id, "post_three"
-url.set "http://www.youtube.com/watch?v=f34zcceVu7U"
+		@browser.a(:id, "tab_audio_upload").click
 
-@browser.button(:class, "create_post_button chrome blue txt ").click 
+		@browser.a(:id, "tab_audio_external").click 
 
-binding.pry 
+		url = @browser.text_field :id, "post_three"
+		url.set "http://www.youtube.com/watch?v=f34zcceVu7U"
+
+		@browser.button(:class, "create_post_button chrome blue txt ").click 
+	end 
+end 
+

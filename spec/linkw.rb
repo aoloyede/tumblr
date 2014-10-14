@@ -1,29 +1,36 @@
 require 'spec_helper'
 require 'watir'
-require 'pry'
 
-@browser = Watir:: Browser.new :firefox
+describe "Logged in user posting link" do 
 
-@browser.goto url("/login")
+	before(:all) do 
+		@browser = Watir:: Browser.new :firefox
+		@browser.goto url("/login")
+	end
 
-text = @browser.text_field :id, "signup_email"
-text.set "aoloyede@testingcircle.com"
+	after(:all) do 
+		@browser.close
+	end 
 
-pw = @browser.text_field :id, "signup_password"
-pw.set "testacademy"
+	it "Logging in" do 
+		text = @browser.text_field :id, "signup_email"
+		text.set "aoloyede@testingcircle.com"
 
-@browser.button(:id, "signup_forms_submit").click
+		pw = @browser.text_field :id, "signup_password"
+		pw.set "testacademy"
 
-@browser.a(:id, "new_post_label_link").click 
+		@browser.button(:id, "signup_forms_submit").click
+	end 
 
-l = @browser.text_field :id, "post_two"
-l.set "https://soundcloud.com/allstar-365/the-official-allstarhouseparty"
+	it "Posting link" do 
+		@browser.a(:id, "new_post_label_link").click 
 
-title = @browser.text_field :id, "post_one"
-title.set "allstar 365 aka Kenny"
+		l = @browser.text_field :id, "post_two"
+		l.set "https://soundcloud.com/allstar-365/the-official-allstarhouseparty"
 
-@browser.button(:class, "create_post_button chrome blue txt ").click 
+		title = @browser.text_field :id, "post_one"
+		title.set "allstar 365 aka Kenny"
 
-binding.pry
-
-browser.close 
+		@browser.button(:class, "create_post_button chrome blue txt ").click 
+	end 
+end

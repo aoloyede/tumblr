@@ -1,31 +1,41 @@
 require 'spec_helper'
 require 'watir'
-require 'pry'
 
-@browser = Watir:: Browser.new :firefox
+describe "Logged in user posting a quote" do 
 
-@browser.goto url("/login")
+	before(:all) do 
+		@browser = Watir:: Browser.new :firefox
+		@browser.goto url("/login")
+	end
 
-text = @browser.text_field :id, "signup_email"
-text.set "aoloyede@testingcircle.com"
+	after(:all) do 
+		@browser.close
+	end 
 
-pw = @browser.text_field :id, "signup_password"
-pw.set "testacademy"
+	it "Logging in" do
+		text = @browser.text_field :id, "signup_email"
+		text.set "aoloyede@testingcircle.com"
 
-@browser.button(:id, "signup_forms_submit").click
+		pw = @browser.text_field :id, "signup_password"
+		pw.set "testacademy"
 
-@browser.a(:id, "new_post_label_quote").click 
+		@browser.button(:id, "signup_forms_submit").click
+	end 
 
-a = @browser.text_field :id, "post_one"
-a.set "I don't know you but I feel you"
+	it "Posting quote" do 
+		@browser.a(:id, "new_post_label_quote").click 
 
-@browser.button(:class, "create_post_button chrome blue txt ").click 
+		a = @browser.text_field :id, "post_one"
+		a.set "I don't know you but I feel you"
 
-@browser.div(:class, "post_wrapper").wait_until_present
+		@browser.button(:class, "create_post_button chrome blue txt ").click 
 
-    puts "Correct" if @browser.text.include? "don't know you but I feel you"
+		@browser.div(:class, "post_wrapper").wait_until_present
+
+    	expect(@browser.text.include? "don't know you but I feel you")
+    end 
+end 
 
 
-binding.pry
 
-browser.close 
+
